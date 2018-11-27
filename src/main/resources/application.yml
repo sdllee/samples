@@ -1,0 +1,39 @@
+logging:
+  level:
+    root: error
+spring:
+    redis:
+      #数据库索引
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      jedis:
+        pool:
+          #最大连接数
+          max-active: 5000
+          #最大阻塞等待时间(负数表示没限制)
+          max-wait: 10000
+          #最大空闲
+          max-idle: 5000
+          #最小空闲
+          min-idle: 500
+          testOnBorrow: true
+      #连接超时时间
+      timeout: 10000
+sharding.jdbc:
+    data-sources:      # 注意命名格式
+      ds_master:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3305/test?useUnicode=true&characterEncoding=utf-8&useSSL=true
+        username: root
+        password: root
+      ds_slave_0:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3305/test_slave?useUnicode=true&characterEncoding=utf-8&useSSL=true
+        username: root
+        password: root
+    master-slave-rule:
+      name: ds_ms
+      master-data-source-name: ds_master
+      slave-data-source-names: ds_slave_0
+      load-balance-algorithm-type: round_robin
